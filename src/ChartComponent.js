@@ -3,8 +3,6 @@
 import React, { useEffect } from 'react';
 
 const ChartComponent = ({ selectedCategories, id }) => {
-    console.log(selectedCategories)
-
     useEffect(() => {
         const dataSeries = Object.entries(selectedCategories).flatMap(([group, categories]) => {
             return categories.map(category => {
@@ -20,8 +18,6 @@ const ChartComponent = ({ selectedCategories, id }) => {
                 };
             });
         });
-
-        console.log(dataSeries)
     
         // Определяем единицу измерения для первой выбранной категории
         // Это предполагает, что все категории имеют одинаковую единицу измерения

@@ -13,6 +13,7 @@ const GraphCreator = ({ onRemove, id }) => {
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [categories, setCategories] = useState({});
   const [selectedCategories, setSelectedCategories] = useState({});
+  const [selectedUnit, setSelectedUnit] = useState({});
 
   useEffect(() => {
     axios.get('http://localhost:8080/api/v1/regions/list')
@@ -32,6 +33,7 @@ const GraphCreator = ({ onRemove, id }) => {
           setCategories(providersData);
           setSelectedProvider(firstProvider); // Устанавливаем первого провайдера как выбранного
           setSelectedCategories({});
+          setSelectedUnit(null)
         })
         .catch(error => console.error('Ошибка при загрузке категорий:', error));
     }
@@ -39,25 +41,41 @@ const GraphCreator = ({ onRemove, id }) => {
 
   const handleRegionChange = (event) => {
     setSelectedRegion(event.target.value);
+    setSelectedUnit(null)
   };
 
   const handleProviderChange = (values) => {
     const selectedValue = values.length > 0 ? values[0].value : null;
     setSelectedProvider(selectedValue);
     setSelectedCategories({}); // Сброс выбранных категорий при смене провайдера
+    setSelectedUnit(null)
   };
 
   const handleCategorySelection = (group, categories) => {
+    var len = Object.values(selectedCategories).reduce((sum, currentArray) => {
+      return sum + currentArray.length;
+    }, 0);
+    if (len === 0) {
+      setSelectedUnit(categories[0].Unit)
+    }
+
     setSelectedCategories({
       ...selectedCategories,
       [group]: categories
     });
+
+    len = Object.values(selectedCategories).reduce((sum, currentArray) => {
+      return sum + currentArray.length;
+    }, 0);
+    if (len === 1) {
+      setSelectedUnit(null)
+    }
   };
 
   return (
     <div className="graph-creator">
       <div className="sidebar">
-      <Select
+        <Select
           options={regions.map(region => ({ label: region.RegionName, value: region.ID }))}
           onChange={values => handleRegionChange({ target: { value: values[0].value } })}
           values={selectedRegion ? [{ label: regions.find(r => r.ID === selectedRegion).RegionName, value: selectedRegion }] : []}
@@ -80,6 +98,7 @@ const GraphCreator = ({ onRemove, id }) => {
             categories={cats}
             selectedCategories={selectedCategories[group] || []}
             onCategorySelection={handleCategorySelection}
+            selectedUnit={selectedUnit}
           />
         ))}
       </div>
@@ -91,7 +110,9 @@ const GraphCreator = ({ onRemove, id }) => {
   );
 };
 
-const CategorySelector = ({ group, categories, selectedCategories, onCategorySelection }) => {
+const CategorySelector = ({ group, categories, selectedCategories, onCategorySelection, selectedUnit }) => {
+  categories = selectedUnit ? categories.filter(cat => cat.Unit === selectedUnit) : categories
+
   // Формируем опции для react-dropdown-select, включая единицу измерения в label
   const options = categories.map(cat => ({
     label: `${cat.Name} (${cat.Unit})`,
@@ -117,16 +138,18 @@ const CategorySelector = ({ group, categories, selectedCategories, onCategorySel
   };
 
   return (
-    <div>
-      <h3>{group}</h3>
-      <Select
-        options={options}
-        values={values}
-        onChange={handleSelection}
-        multi
-        placeholder={`Выберите категории`}
-      />
-    </div>
+    categories.length > 0 && (
+      <div>
+        <h3>{group}</h3>
+        <Select
+          options={options}
+          values={values}
+          onChange={handleSelection}
+          multi
+          placeholder={`Выберите категории`}
+        />
+      </div>
+    )
   );
 };
 

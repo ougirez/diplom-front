@@ -47,10 +47,10 @@ const GraphCreator = ({ onRemove, id }) => {
     setSelectedCategories({}); // Сброс выбранных категорий при смене провайдера
   };
 
-  const handleCategorySelection = (group, selectedNames) => {
+  const handleCategorySelection = (group, categories) => {
     setSelectedCategories({
       ...selectedCategories,
-      [group]: selectedNames
+      [group]: categories
     });
   };
 
@@ -84,7 +84,7 @@ const GraphCreator = ({ onRemove, id }) => {
         ))}
       </div>
       <div className="chart-area">
-        <ChartComponent id={id} selectedCategories={selectedCategories} categories={selectedProvider ? categories[selectedProvider] : {}} />
+        <ChartComponent id={id} selectedCategories={selectedCategories} />
       </div>
       <button onClick={() => onRemove(id)}>Удалить график</button>
     </div>
@@ -99,11 +99,10 @@ const CategorySelector = ({ group, categories, selectedCategories, onCategorySel
   }));
 
   // Преобразуем выбранные категории в формат, который ожидает react-dropdown-select
-  const values = selectedCategories.map(catName => {
-    const category = categories.find(cat => cat.Name === catName);
+  const values = selectedCategories.map(category => {
     return {
       label: `${category.Name} (${category.Unit})`,
-      value: catName,
+      value: category.Name,
       unit: category.Unit
     };
   });
@@ -111,8 +110,10 @@ const CategorySelector = ({ group, categories, selectedCategories, onCategorySel
   const handleSelection = (values) => {
     // Получаем массив имен выбранных категорий из значений
     const selectedNames = values.map(item => item.value);
+
+    const selectedCategories = categories.filter(category => selectedNames.includes(category.Name))
     // Вызываем функцию обработки выбора категории
-    onCategorySelection(group, selectedNames);
+    onCategorySelection(group, selectedCategories);
   };
 
   return (

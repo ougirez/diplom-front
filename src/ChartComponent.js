@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 
-const ChartComponent = ({ selectedCategories, id }) => {
+const ChartComponent = ({ selectedCategories, id, selectedUnit }) => {
     useEffect(() => {
         const dataSeries = Object.entries(selectedCategories).flatMap(([group, categories]) => {
             return categories.map(category => {
@@ -22,8 +22,7 @@ const ChartComponent = ({ selectedCategories, id }) => {
         // Определяем единицу измерения для первой выбранной категории
         // Это предполагает, что все категории имеют одинаковую единицу измерения
         // Если они разные, вы можете отображать их по-другому или не отображать вообще
-        const firstSelectedCategory = selectedCategories[Object.keys(selectedCategories)[0]]?.[0];
-        const unit = firstSelectedCategory ? firstSelectedCategory.Unit : '';
+       
     
         const chart = new CanvasJS.Chart(`chartContainer-${id}`, {
             title: {
@@ -34,14 +33,14 @@ const ChartComponent = ({ selectedCategories, id }) => {
                 valueFormatString: "YYYY"
             },
             axisY: {
-                title: "Значение " + (unit ? `(${unit})` : ''), // Добавляем единицу измерения к заголовку оси Y
+                title: `Значение (${selectedUnit})`, // Добавляем единицу измерения к заголовку оси Y
             },
             data: dataSeries
         });
     
         chart.render();
         return () => chart.destroy();
-    }, [selectedCategories, id]);
+    }, [selectedCategories, id, selectedUnit]);
 
     return <div id={`chartContainer-${id}`} className="chart-container"></div>;
 };

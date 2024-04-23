@@ -103,7 +103,7 @@ const GraphCreator = ({ onRemove, id }) => {
         ))}
       </div>
       <div className="chart-area">
-        <ChartComponent id={id} selectedCategories={selectedCategories} />
+        <ChartComponent id={id} selectedCategories={selectedCategories} selectedUnit={selectedUnit} />
       </div>
       <button onClick={() => onRemove(id)}>Удалить график</button>
     </div>

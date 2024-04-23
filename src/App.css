@@ -2,26 +2,11 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
 .App-link {
@@ -39,8 +24,11 @@
 
 .app-container {
   display: flex;
-  flex-direction: row;
-  height: 100vh; /* Высота всего экрана */
+  flex-direction: column; /* Меняем направление на колонку */
+  align-items: center; /* Центрируем содержимое по горизонтали */
+  height: auto; /* Высота по содержимому */
+  padding: 20px;
+  gap: 20px; /* Промежуток между элементами */
 }
 
 .sidebar {
@@ -49,8 +37,7 @@
   max-height: 50%;
   background-color: #f7f7f7;
   padding: 1rem;
-  overflow-y: auto; /* Вертикальный скролл, если нужно */
-  overflow-x: hidden; /* Убираем горизонтальный скролл */
+
 }
 
 .chart-container {
@@ -59,4 +46,61 @@
   max-width: 50%;
   max-height: 50%;
   overflow-y: auto; /* Вертикальный скролл, если нужно */
+}
+
+.chart-area {
+  flex-grow: 1; /* График занимает оставшееся место */
+
+  height: 500px; /* Высота графика */
+  margin-left: 50px; /* Отступ от сайдбара */
+}
+
+.graph-creator {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 20px;
+  height: auto; /* Высота по содержимому */
+}
+
+.graph-creator button {
+  margin-top: 10px;
+}
+
+.add-graph-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px; /* Отступ сверху */
+  width: auto; /* Ширина по содержимому */
+}
+
+.graph-creator {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 20px; /* Отступ снизу до следующего graph-creator или кнопки */
+  width: 100%; /* Ширина на всю доступную область */
+}
+
+.sidebar {
+  width: 250px; /* Задаём ширину сайдбара */
+  background-color: #f7f7f7;
+  padding: 1rem;
+
+}
+
+.chart-area {
+  flex-grow: 1; /* График занимает оставшееся место */
+  min-width: 0; /* Позволяет элементу сжиматься при необходимости */
+  width: 50%; /* Ширина графика, можно задать в процентах от оставшегося пространства */
+  height: 50%; /* Высота графика */
+}
+
+/* Если chart-container - это класс непосредственно канваса графика, то его стили могут быть такими: */
+.chart-container {
+  width: 100%; /* Ширина на всю доступную область */
+  height: 500px; /* Высота может быть задана фиксированной или в процентах от .chart-area */
 }

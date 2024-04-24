@@ -16,10 +16,13 @@ const App = () => {
 
   return (
     <div className="app-container">
-      {graphCreators.map((gcId) => (
-        <GraphCreator key={gcId} id={gcId} onRemove={removeGraphCreator} />
-      ))}
-      <button className="add-graph-button" onClick={addGraphCreator}>Добавить график</button>
+        {graphCreators.map((gcId) => (
+            <GraphCreator key={gcId} id={gcId} onRemove={removeGraphCreator} />
+        ))}
+      <div>
+        <button className="add-graph-button" onClick={addGraphCreator}>Добавить график для региона</button>
+        <button className="add-graph-button" onClick={addGraphCreator}>Добавить график для категории</button>
+      </div>
     </div>
   );
 };

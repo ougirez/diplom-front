@@ -31,49 +31,22 @@
   gap: 20px; /* Промежуток между элементами */
 }
 
-.sidebar {
-  width: auto; /* Ширина автоматически подстраивается под содержимое */
-  max-width: 40%; /* Гарантирует, что sidebar не выйдет за пределы экрана */
-  max-height: 50%;
-  background-color: #f7f7f7;
-  padding: 1rem;
-
-}
-
-.chart-container {
-  flex: 2; /* График занимает больше места чем боковая панель */
-  padding: 20px;
-  max-width: 50%;
-  max-height: 50%;
-  overflow-y: auto; /* Вертикальный скролл, если нужно */
-}
-
-.chart-area {
-  flex-grow: 1; /* График занимает оставшееся место */
-
-  height: 500px; /* Высота графика */
-  margin-left: 50px; /* Отступ от сайдбара */
-}
-
-.graph-creator {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 20px;
-  margin-bottom: 20px;
-  height: auto; /* Высота по содержимому */
-}
-
-.graph-creator button {
-  margin-top: 10px;
-}
-
 .add-graph-button {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
   margin-top: 20px; /* Отступ сверху */
   width: auto; /* Ширина по содержимому */
+  margin-right: 15px;
+}
+
+.graph-creator .chart-area {
+  position: relative; /* Needed to establish a new stacking context */
+}
+
+.graph-creator button {
+  position: relative; /* Needed to make z-index effective */
+  z-index: 10; /* Higher z-index to bring the button to the front */
 }
 
 .graph-creator {
@@ -85,22 +58,32 @@
   width: 100%; /* Ширина на всю доступную область */
 }
 
+.graph-creator button {
+  margin-top: 10px;
+}
+
 .sidebar {
-  width: 400px; /* Задаём ширину сайдбара */
+  width: 50%; /* Ширина боковой панели составляет 50% от ширины экрана */
+  height: 50vh; /* Высота боковой панели равна высоте видимой части экрана */
+  overflow-y: auto; /* Добавляем вертикальный скролл при необходимости */
   background-color: #f7f7f7;
   padding: 1rem;
+  box-sizing: border-box; /* Включаем паддинги в общий размер, чтобы избежать проблем с размерами */
+}
 
+/* Убедимся, что весь контент внутри sidebar также будет адекватно отображаться */
+.sidebar > div {
+  max-height: 100%; /* Ограничиваем максимальную высоту каждого div внутри sidebar */
+}
+
+.chart-container {
+  flex: 2; /* График занимает больше места, чем боковая панель */
+  padding: 20px;
+  width: 100%; /* Ширина на всю доступную область */
+  height: 50vh;
 }
 
 .chart-area {
-  flex-grow: 1; /* График занимает оставшееся место */
-  min-width: 0; /* Позволяет элементу сжиматься при необходимости */
-  width: 50%; /* Ширина графика, можно задать в процентах от оставшегося пространства */
-  height: 50%; /* Высота графика */
-}
-
-/* Если chart-container - это класс непосредственно канваса графика, то его стили могут быть такими: */
-.chart-container {
-  width: 100%; /* Ширина на всю доступную область */
-  height: 500px; /* Высота может быть задана фиксированной или в процентах от .chart-area */
+  width: 120%; /* Ширина графика, можно задать в процентах от оставшегося пространства */
+  height: 100%; /* Высота графика */
 }

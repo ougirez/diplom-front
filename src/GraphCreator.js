@@ -66,6 +66,10 @@ const GraphCreator = ({onRemove, id, graphType}) => {
             [group]: categories
         };
 
+        if (categories.length === 0) {
+            delete updatedCategories[group];
+        }
+
         var len = selectedLen(updatedCategories);
         if (len === 1 && categories.length > 0) {
             setSelectedUnit(categories[0].Unit);
@@ -78,44 +82,14 @@ const GraphCreator = ({onRemove, id, graphType}) => {
         }
     };
 
-    const handleAdditionalRegionSelection = (event) => {
-        if (event.selectedRegion) {
-            const url = `http://localhost:8080/api/v1/regions/${event.selectedRegionId}/categories?category_name=${event.categoryName}&group_category_name=${event.groupCategoryName}`
-            axios.get(url)
-                .then(response => {
-                    const providersData = response.data;
-                    if (Object.keys(providersData).length > 0) {
-                        event.selectedProvider = Object.keys(providersData)[0] // Устанавливаем первого провайдера как выбранного
-                        event.categoryData = providersData;
-                    }
-
-                    console.log(url)
-                    console.log(response)
-                    const updated = {
-                        ...selectedAdditionalRegions, [event.id]: {
-                            region: event.selectedRegion,
-                            regionId: event.selectedRegionId,
-                            selectedProvider: event.selectedProvider,
-                            categoryData: event.categoryData
-                        }
-                    }
-
-                    setSelectedAdditionalRegions(updated)
-                    console.log(updated)
-                })
-                .catch(error => console.error('Ошибка при загрузке категорий:', error));
-        } else {
-            const updated = {
-                ...selectedAdditionalRegions, [event.id]: {
-                    region: event.selectedRegion,
-                    regionId: event.selectedRegionId,
-                }
-            }
-
-            setSelectedAdditionalRegions(updated)
-            // console.log(updated)
+    const handleAdditionalRegionSelection = (id, selected) => {
+        const updated = {
+            ...selectedAdditionalRegions, [id]: selected
         }
 
+        console.log(updated)
+
+        setSelectedAdditionalRegions(updated)
     }
 
     const handleAdditionalRegionProviderSelection = (event) => {
@@ -190,6 +164,7 @@ const RegionsGraphSelector = ({
                                   handleAdditionalRegionProviderSelection
                               }) => {
 
+    console.log(selectedCategories)
     const groupCategoryName = Object.keys(selectedCategories)[0]
     const categoryName = selectedCategories[groupCategoryName][0].Name
 
@@ -207,52 +182,21 @@ const RegionsGraphSelector = ({
             ))}
             <h3>Выберите дополнительные регионы</h3>
             {Object.entries(selectedAdditionalRegions || {}).map(([id, info]) => (
-                <React.Fragment key={id}>
-                    <Select
-                        options={regions.filter(r => (r.ID !== selectedRegionID && !Object.values(selectedAdditionalRegions).map(item => item.region).includes(r.RegionName))).map(region => ({
-                            label: region.RegionName,
-                            value: region.ID
-                        }))}
-                        onChange={values => handleAdditionalRegionSelection({
-                            id: id,
-                            groupCategoryName: groupCategoryName,
-                            categoryName: categoryName,
-                            selectedRegion: values[0].label,
-                            selectedRegionId: values[0].value
-                        })}
-                        values={selectedAdditionalRegions[id] ? [{
-                            label: selectedAdditionalRegions[id].selectedRegion,
-                            value: selectedAdditionalRegions[id].selectedRegionId
-                        }] : []}
-                        placeholder="Выберите регион"
-                    />
+                <RegionProviderSelector
+                    id={id}
+                    info={info}
+                    regions={regions}
+                    selectedRegionID={selectedRegionID}
+                    categoryName={categoryName}
+                    groupCategoryName={groupCategoryName}
+                    selectedAdditionalRegions={selectedAdditionalRegions}
+                    handleAdditionalRegionSelection={handleAdditionalRegionSelection}
+                    handleAdditionalRegionProviderSelection={handleAdditionalRegionProviderSelection}
 
-                    {info.selectedRegion && (
-                        <Select
-                            options={Object.keys(info.categoryData).map(provider => ({
-                                label: provider,
-                                value: provider
-                            }))}
-                            onChange={values => handleAdditionalRegionProviderSelection({
-                                id: id,
-                                selectedProvider: values[0].label
-                            })}
-                            values={info.selectedProvider ? [{
-                                label: info.selectedProvider,
-                                value: info.selectedProvider
-                            }] : []}
-                            placeholder="Выберите провайдера"
-                        />
-                    )}
-
-                </React.Fragment>
+                />
             ))}
             <button
-                onClick={() => handleAdditionalRegionSelection({
-                        id: Object.keys(selectedAdditionalRegions).length,
-                    }
-                )}>Добавить
-                регион
+                onClick={() => handleAdditionalRegionSelection(Object.keys(selectedAdditionalRegions).length, {})}>Добавить регион
             </button>
             {/*<Select*/}
             {/*    options={regions.map(region => ({label: region.RegionName, value: region.ID}))}*/}
@@ -263,6 +207,108 @@ const RegionsGraphSelector = ({
             {/*    }] : []}*/}
             {/*    placeholder="Выберите регион"*/}
             {/*/>*/}
+        </div>
+    )
+}
+
+const RegionProviderSelector = ({
+                                    id,
+                                    info,
+                                    regions,
+                                    selectedRegionID,
+                                    categoryName,
+                                    groupCategoryName,
+                                    selectedAdditionalRegions,
+                                    handleAdditionalRegionSelection,
+                                    handleAdditionalRegionProviderSelection
+                                }) => {
+
+    const [selectedRegionName, setSelectedRegionName] = useState(null);
+    const [selectedProvider, setSelectedProvider] = useState(null);
+    const [categoryData, setCategoryData] = useState({});
+
+    const handleRegionSelection = (event) => {
+        console.log(event)
+        const url = `http://localhost:8080/api/v1/regions/${event.selectedRegionId}/categories?category_name=${event.categoryName}&group_category_name=${event.groupCategoryName}`
+        axios.get(url)
+            .then(response => {
+                const providersData = response.data;
+                if (Object.keys(providersData).length > 0) {
+                    event.selectedProvider = Object.keys(providersData)[0] // Устанавливаем первого провайдера как выбранного
+                    event.categoryData = providersData;
+                }
+
+                console.log(url)
+                console.log(response)
+
+                const updated = {
+                    region: event.selectedRegion,
+                    regionId: event.selectedRegionId,
+                    selectedProvider: event.selectedProvider,
+                    categoryData: event.categoryData
+                }
+
+                handleAdditionalRegionSelection(event.id, updated)
+
+                setSelectedProvider(event.selectedProvider)
+                setCategoryData(event.categoryData)
+                setSelectedRegionName(event.selectedRegion)
+
+                console.log(updated)
+            })
+            .catch(error => console.error('Ошибка при загрузке категорий:', error));
+    }
+
+    console.log(selectedAdditionalRegions)
+    console.log(Object.values(selectedAdditionalRegions))
+
+    return (
+        <div className="region-selector">
+            <Select
+                options={regions.filter(r => (r.ID !== selectedRegionID && !Object.values(selectedAdditionalRegions).map(item => item.region).includes(r.RegionName))).map(region => ({
+                    label: region.RegionName,
+                    value: region.ID
+                }))}
+                onChange={values => {
+                    handleRegionSelection({
+                        id: id,
+                        groupCategoryName: groupCategoryName,
+                        categoryName: categoryName,
+                        selectedRegion: values[0].label,
+                        selectedRegionId: values[0].value
+                    })
+
+                    console.log(selectedAdditionalRegions[id])
+                    // setSelectedRegionName(values[0].label)
+                }}
+                values={selectedAdditionalRegions[id] ? [{
+                    label: selectedAdditionalRegions[id].selectedRegion,
+                    value: selectedAdditionalRegions[id].selectedRegionId
+                }] : []}
+                placeholder="Выберите регион"
+            />
+
+            {selectedRegionName && (
+                <Select
+                    options={Object.keys(categoryData).map(provider => ({
+                        label: provider,
+                        value: provider
+                    }))}
+                    onChange={values => {
+                        setSelectedProvider(values[0].label)
+                        handleAdditionalRegionProviderSelection({
+                            id: id,
+                            selectedProvider: values[0].label
+                        })}
+                    }
+
+                    values={selectedProvider ? [{
+                        label: selectedProvider,
+                        value: selectedProvider
+                    }] : []}
+                    placeholder="Выберите провайдера"
+                />
+            )}
         </div>
     )
 }

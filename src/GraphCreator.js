@@ -1,9 +1,10 @@
 // GraphCreator.js
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import ChartComponent from './ChartComponent';
+import RegionChartComponent from './RegionChartComponent';
 import Select from 'react-dropdown-select';
 import './App.css';
+import CategoryChartComponent from "./CategoryChartComponent";
 
 function selectedLen(selectedCategoriesByGroup) {
     return Object.values(selectedCategoriesByGroup).reduce((sum, currentArray) => {
@@ -87,15 +88,11 @@ const GraphCreator = ({onRemove, id, graphType}) => {
             ...selectedAdditionalRegions, [id]: selected
         }
 
-        console.log(updated)
-
         setSelectedAdditionalRegions(updated)
     }
 
     const handleAdditionalRegionProviderSelection = (event) => {
         selectedAdditionalRegions[event.id].selectedProvider = event.selectedProvider
-
-        console.log(selectedAdditionalRegions)
     }
 
     return (
@@ -145,8 +142,22 @@ const GraphCreator = ({onRemove, id, graphType}) => {
                 }
             </div>
             <div className="chart-area">
-                <ChartComponent id={id} selectedCategories={selectedCategories}
-                                regionName={selectedRegion ? regions.find(region => region.ID === selectedRegion).RegionName : null}/>
+                {graphType === 'region' &&
+                    <RegionChartComponent
+                        id={id}
+                        selectedCategories={selectedCategories}
+                        regionName={selectedRegion ? regions.find(region => region.ID === selectedRegion).RegionName : null}
+                    />
+                }
+                {graphType === 'category' &&
+                    <CategoryChartComponent
+                        id={id}
+                        selectedCategories={selectedCategories}
+                        regionName={selectedRegion ? regions.find(region => region.ID === selectedRegion).RegionName : null}
+                        selectedAdditionalRegions={selectedAdditionalRegions}
+                    />
+                }
+
             </div>
             <button onClick={() => onRemove(id)}>Удалить график</button>
         </div>
@@ -164,7 +175,6 @@ const RegionsGraphSelector = ({
                                   handleAdditionalRegionProviderSelection
                               }) => {
 
-    console.log(selectedCategories)
     const groupCategoryName = Object.keys(selectedCategories)[0]
     const categoryName = selectedCategories[groupCategoryName][0].Name
 
@@ -196,7 +206,8 @@ const RegionsGraphSelector = ({
                 />
             ))}
             <button
-                onClick={() => handleAdditionalRegionSelection(Object.keys(selectedAdditionalRegions).length, {})}>Добавить регион
+                onClick={() => handleAdditionalRegionSelection(Object.keys(selectedAdditionalRegions).length+1, {})}>Добавить
+                регион
             </button>
             {/*<Select*/}
             {/*    options={regions.map(region => ({label: region.RegionName, value: region.ID}))}*/}
@@ -228,7 +239,6 @@ const RegionProviderSelector = ({
     const [categoryData, setCategoryData] = useState({});
 
     const handleRegionSelection = (event) => {
-        console.log(event)
         const url = `http://localhost:8080/api/v1/regions/${event.selectedRegionId}/categories?category_name=${event.categoryName}&group_category_name=${event.groupCategoryName}`
         axios.get(url)
             .then(response => {
@@ -237,9 +247,6 @@ const RegionProviderSelector = ({
                     event.selectedProvider = Object.keys(providersData)[0] // Устанавливаем первого провайдера как выбранного
                     event.categoryData = providersData;
                 }
-
-                console.log(url)
-                console.log(response)
 
                 const updated = {
                     region: event.selectedRegion,
@@ -254,13 +261,9 @@ const RegionProviderSelector = ({
                 setCategoryData(event.categoryData)
                 setSelectedRegionName(event.selectedRegion)
 
-                console.log(updated)
             })
             .catch(error => console.error('Ошибка при загрузке категорий:', error));
     }
-
-    console.log(selectedAdditionalRegions)
-    console.log(Object.values(selectedAdditionalRegions))
 
     return (
         <div className="region-selector">
@@ -278,7 +281,6 @@ const RegionProviderSelector = ({
                         selectedRegionId: values[0].value
                     })
 
-                    console.log(selectedAdditionalRegions[id])
                     // setSelectedRegionName(values[0].label)
                 }}
                 values={selectedAdditionalRegions[id] ? [{
@@ -299,7 +301,8 @@ const RegionProviderSelector = ({
                         handleAdditionalRegionProviderSelection({
                             id: id,
                             selectedProvider: values[0].label
-                        })}
+                        })
+                    }
                     }
 
                     values={selectedProvider ? [{

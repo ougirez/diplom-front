@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from 'react';
 
-const ChartComponent = ({ selectedCategories, id, regionName }) => {
+const RegionChartComponent = ({ selectedCategories, id, regionName }) => {
     const [selectedUnit, setSelectedUnit] = useState({});
 
     useEffect(() => {
@@ -21,10 +21,6 @@ const ChartComponent = ({ selectedCategories, id, regionName }) => {
             });
         });
     
-        // Определяем единицу измерения для первой выбранной категории
-        // Это предполагает, что все категории имеют одинаковую единицу измерения
-        // Если они разные, вы можете отображать их по-другому или не отображать вообще
-
         const chart = new CanvasJS.Chart(`chartContainer-${id}`, {
             theme: "light2",
             title: {
@@ -47,9 +43,9 @@ const ChartComponent = ({ selectedCategories, id, regionName }) => {
     
         chart.render();
         return () => chart.destroy();
-    }, [selectedCategories, id, selectedUnit]);
+    }, [selectedCategories, id, selectedUnit, regionName]);
 
     return <div id={`chartContainer-${id}`} className="chart-container"></div>;
 };
 
-export default ChartComponent;
+export default RegionChartComponent;

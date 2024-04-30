@@ -5,6 +5,8 @@ import RegionChartComponent from './RegionChartComponent';
 import Select from 'react-dropdown-select';
 import './App.css';
 import CategoryChartComponent from "./CategoryChartComponent";
+import MapChart from "./MapChart";
+import {Tooltip} from "react-tooltip";
 
 function selectedLen(selectedCategoriesByGroup) {
     return Object.values(selectedCategoriesByGroup).reduce((sum, currentArray) => {
@@ -157,7 +159,11 @@ const GraphCreator = ({onRemove, id, graphType}) => {
                         selectedAdditionalRegions={selectedAdditionalRegions}
                     />
                 }
-
+                {graphType === 'map' &&
+                    <MapChart
+                        id={id}
+                    />
+                }
             </div>
             <button onClick={() => onRemove(id)}>Удалить график</button>
         </div>
@@ -206,7 +212,7 @@ const RegionsGraphSelector = ({
                 />
             ))}
             <button
-                onClick={() => handleAdditionalRegionSelection(Object.keys(selectedAdditionalRegions).length+1, {})}>Добавить
+                onClick={() => handleAdditionalRegionSelection(Object.keys(selectedAdditionalRegions).length + 1, {})}>Добавить
                 регион
             </button>
             {/*<Select*/}

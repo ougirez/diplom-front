@@ -9,7 +9,6 @@ const CategoryChartComponent = ({selectedCategories, id, regionName, selectedAdd
     const categoryName = groupCategoryName !== '' ? selectedCategories[groupCategoryName][0].Name : ''
 
     useEffect(() => {
-        let unit = ''
 
         let data = Object.values(selectedAdditionalRegions).filter(r => r.region!==undefined).map(r => {
             console.log(r.regionName)
@@ -24,7 +23,7 @@ const CategoryChartComponent = ({selectedCategories, id, regionName, selectedAdd
                 regionName: regionName,
                 yearData: selectedCategories[groupCategoryName][0].YearData
             }]
-            unit = selectedCategories[groupCategoryName][0].Unit
+            setSelectedUnit(selectedCategories[groupCategoryName][0].Unit)
         }
         console.log(data)
 

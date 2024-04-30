@@ -91,3 +91,17 @@
 .region-selector {
   margin-bottom: 10px;
 }
+
+.map {
+  width: 100%;
+  max-width: 980px;
+  height: 50vh;
+  margin: 0 auto;
+  overflow-y: auto;
+}
+
+
+.geography:hover {
+  fill: #f53;
+  cursor: pointer;
+}

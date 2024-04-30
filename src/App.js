@@ -14,6 +14,10 @@ const App = () => {
     setGraphCreators([...graphCreators, {id: graphCreators.length, type: "category"}]);
   };
 
+  const addMapGraphCreator = () => {
+    setGraphCreators([...graphCreators, {id: graphCreators.length, type: "map"}]);
+  };
+
   const removeGraphCreator = (id) => {
     setGraphCreators(graphCreators.filter(graph => graph.id !== id));
   };
@@ -26,6 +30,7 @@ const App = () => {
       <div>
         <button className="add-graph-button" onClick={addRegionGraphCreator}>Добавить график для региона</button>
         <button className="add-graph-button" onClick={addCategoryGraphCreator}>Добавить график для категории</button>
+        <button className="add-graph-button" onClick={addMapGraphCreator}>Добавить карту</button>
       </div>
     </div>
   );

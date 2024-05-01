@@ -41,10 +41,10 @@ const GraphCreator = ({onRemove, id, graphType}) => {
             axios.get(`http://localhost:8080/api/v1/regions/${selectedRegion}/categories`)
                 .then(response => {
                     const providersData = response.data;
-                    const firstProvider = Object.keys(providersData)[0]; // Берем первого провайдера из списка
+                    const firstProvider = Object.keys(providersData)[0];
                     setProviders(Object.keys(providersData));
                     setCategories(providersData);
-                    setSelectedProvider(firstProvider); // Устанавливаем первого провайдера как выбранного
+                    setSelectedProvider(firstProvider);
                     setSelectedCategories({});
                     setSelectedUnit(null)
                     setSelectedAdditionalRegions({})
@@ -63,7 +63,7 @@ const GraphCreator = ({onRemove, id, graphType}) => {
     const handleProviderChange = (values) => {
         const selectedValue = values.length > 0 ? values[0].value : null;
         setSelectedProvider(selectedValue);
-        setSelectedCategories({}); // Сброс выбранных категорий при смене провайдера
+        setSelectedCategories({});
         setSelectedUnit(null)
     };
 
@@ -371,7 +371,7 @@ const RegionProviderSelector = ({
             .then(response => {
                 const providersData = response.data;
                 if (Object.keys(providersData).length > 0) {
-                    event.selectedProvider = Object.keys(providersData)[0] // Устанавливаем первого провайдера как выбранного
+                    event.selectedProvider = Object.keys(providersData)[0]
                     event.categoryData = providersData;
                 }
 
@@ -453,13 +453,11 @@ const RegionCategorySelector = ({
                                 }) => {
     categories = selectedUnit ? categories.filter(cat => cat.Unit === selectedUnit) : categories
 
-    // Формируем опции для react-dropdown-select, включая единицу измерения в label
     const options = categories.map(cat => ({
         label: `${cat.Name} (${cat.Unit})`,
         value: cat.Name
     }));
 
-    // Преобразуем выбранные категории в формат, который ожидает react-dropdown-select
     const values = selectedCategories.map(category => {
         return {
             label: `${category.Name} (${category.Unit})`,
@@ -468,11 +466,9 @@ const RegionCategorySelector = ({
     });
 
     const handleSelection = (values) => {
-        // Получаем массив имен выбранных категорий из значений
         const selectedNames = values.map(item => item.value);
 
         const selectedCategories = categories.filter(category => selectedNames.includes(category.Name))
-        // Вызываем функцию обработки выбора категории
         onCategorySelection(group, selectedCategories, graphType);
     };
 

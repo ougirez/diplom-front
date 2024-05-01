@@ -30,7 +30,7 @@ const CategoryChartComponent = ({selectedCategories, id, regionName, selectedAdd
         const dataSeries = data.map(item => {
             return {
                 type: "spline",
-                name: item.regionName, // Добавляем единицу измерения к имени категории
+                name: item.regionName,
                 showInLegend: true,
                 dataPoints: Object.keys(item.yearData).map(year => ({
                     x: new Date(year, 0),
@@ -51,7 +51,7 @@ const CategoryChartComponent = ({selectedCategories, id, regionName, selectedAdd
                 valueFormatString: "YYYY"
             },
             axisY: {
-                title: `Значение (${selectedUnit})`, // Добавляем единицу измерения к заголовку оси Y
+                title: `Значение (${selectedUnit})`,
             },
             legend: {
                 fontSize: 15,

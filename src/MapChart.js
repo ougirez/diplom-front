@@ -5,7 +5,7 @@ import './App.css';
 import {Tooltip} from "react-tooltip";
 import { scaleLinear } from "d3-scale";
 
-const geoUrl = "Russia_regions.geojson"; // Замените на путь к вашему GeoJSON файлу
+const geoUrl = "Russia_regions.geojson";
 
 const MapChart = ({id, regionsData, selectedYear}) => {
     const [tooltipRegionName, setTooltipRegionName] = useState('');
@@ -64,7 +64,6 @@ const MapChart = ({id, regionsData, selectedYear}) => {
                                     id="tooltip"
                                     style={{
                                         default: {
-                                            // fill: "#D6D6DA",
                                             outline: "none"
                                         },
                                         hover: {

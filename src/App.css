@@ -24,29 +24,29 @@
 
 .app-container {
   display: flex;
-  flex-direction: column; /* Меняем направление на колонку */
-  align-items: center; /* Центрируем содержимое по горизонтали */
-  height: auto; /* Высота по содержимому */
+  flex-direction: column;
+  align-items: center;
+  height: auto;
   padding: 20px;
-  gap: 20px; /* Промежуток между элементами */
+  gap: 20px;
 }
 
 .add-graph-button {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-  margin-top: 20px; /* Отступ сверху */
-  width: auto; /* Ширина по содержимому */
+  margin-top: 20px;
+  width: auto;
   margin-right: 15px;
 }
 
 .graph-creator .chart-area {
-  position: relative; /* Needed to establish a new stacking context */
+  position: relative;
 }
 
 .graph-creator button {
-  position: relative; /* Needed to make z-index effective */
-  z-index: 10; /* Higher z-index to bring the button to the front */
+  position: relative;
+  z-index: 10;
 }
 
 .graph-creator {
@@ -54,8 +54,8 @@
   flex-direction: row;
   align-items: flex-start;
   gap: 20px;
-  margin-bottom: 20px; /* Отступ снизу до следующего graph-creator или кнопки */
-  width: 100%; /* Ширина на всю доступную область */
+  margin-bottom: 20px;
+  width: 100%;
 }
 
 .graph-creator button {
@@ -63,29 +63,29 @@
 }
 
 .sidebar {
-  width: 50%; /* Ширина боковой панели составляет 50% от ширины экрана */
-  height: 50vh; /* Высота боковой панели равна высоте видимой части экрана */
-  overflow-y: auto; /* Добавляем вертикальный скролл при необходимости */
+  width: 50%;
+  height: 57vh;
+  overflow-y: auto;
   background-color: #f7f7f7;
   padding: 1rem;
-  box-sizing: border-box; /* Включаем паддинги в общий размер, чтобы избежать проблем с размерами */
+  box-sizing: border-box;
 }
 
-/* Убедимся, что весь контент внутри sidebar также будет адекватно отображаться */
+
 .sidebar > div {
-  max-height: 100%; /* Ограничиваем максимальную высоту каждого div внутри sidebar */
+  max-height: 100%;
 }
 
 .chart-container {
-  flex: 2; /* График занимает больше места, чем боковая панель */
+  flex: 2;
   padding: 20px;
-  width: 100%; /* Ширина на всю доступную область */
+  width: 100%;
   height: 50vh;
 }
 
 .chart-area {
-  width: 120%; /* Ширина графика, можно задать в процентах от оставшегося пространства */
-  height: 100%; /* Высота графика */
+  width: 120%;
+  height: 100%;
 }
 
 .region-selector {

@@ -7,18 +7,21 @@ import { scaleLinear } from "d3-scale";
 
 const geoUrl = "Russia_regions.geojson";
 
-const MapChart = ({id, regionsData, selectedYear}) => {
+const MapChart = ({id, regionsData, selectedCategoryName, selectedGroupCategoryName, selectedUnit, selectedYear}) => {
     const [tooltipRegionName, setTooltipRegionName] = useState('');
     const [tooltipSquare, setTooltipSquare] = useState(0);
     const [tooltipCategoryValue, setTooltipCategoryValue] = useState(0);
     const [tooltipCategoryValuePercent, setTooltipCategoryValuePercent] = useState(0);
 
     const colorScale = scaleLinear()
-        .domain([0, 0.01])
-        .range(["#ededff", "#00aaff"]);
+        .domain([0, 0.001])
+        .range(["#F5F4F6", "#00eeff"]);
 
     return (
         <div>
+            {selectedCategoryName!=='' &&
+                <h1 style={{textAlign: 'center'}}>{selectedCategoryName}</h1>
+            }
             <ComposableMap data-tip="sdf"
                            projection='geoMercator'
                            projectionConfig={{
@@ -51,7 +54,9 @@ const MapChart = ({id, regionsData, selectedYear}) => {
 
                                         if (regionsData[geo.properties.full_name] !== undefined && !isNaN(regionsData[geo.properties.full_name][selectedYear])) {
                                             setTooltipCategoryValue(categoryValue)
-                                            setTooltipCategoryValuePercent(percent)
+                                            if (selectedUnit === 'тыс. га') {
+                                                setTooltipCategoryValuePercent(percent)
+                                            }
                                         }
                                     }}
                                     fill={percent!==0 ? colorScale(percent) : "#F5F4F6"}
@@ -86,10 +91,10 @@ const MapChart = ({id, regionsData, selectedYear}) => {
                     <span>{tooltipRegionName}</span>
                     <span>Общая площадь {tooltipSquare} тыс. га</span>
 
-                    {regionsData[tooltipRegionName] !== undefined && tooltipCategoryValue !== 0 &&
-                        <span>Значение: {tooltipCategoryValue} тыс. га</span>
+                    {tooltipCategoryValue !== 0 &&
+                        <span>Значение: {tooltipCategoryValue} {selectedUnit}</span>
                     }
-                    {regionsData[tooltipRegionName] !== undefined && tooltipCategoryValue !== 0 &&
+                    {tooltipCategoryValue !== 0 && tooltipCategoryValuePercent !== 0 &&
                         <span>Процент: {tooltipCategoryValuePercent * 100}%</span>
                     }
                 </div>

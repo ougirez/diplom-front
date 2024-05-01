@@ -11,7 +11,6 @@ const CategoryChartComponent = ({selectedCategories, id, regionName, selectedAdd
     useEffect(() => {
 
         let data = Object.values(selectedAdditionalRegions).filter(r => r.region!==undefined).map(r => {
-            console.log(r.regionName)
             const selectedProvider = r!==undefined ? r.selectedProvider : ''
             return {
                 regionName: r.region,
@@ -25,7 +24,6 @@ const CategoryChartComponent = ({selectedCategories, id, regionName, selectedAdd
             }]
             setSelectedUnit(selectedCategories[groupCategoryName][0].Unit)
         }
-        console.log(data)
 
         const dataSeries = data.map(item => {
             return {

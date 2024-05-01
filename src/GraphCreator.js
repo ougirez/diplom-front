@@ -27,6 +27,8 @@ const GraphCreator = ({onRemove, id, graphType}) => {
     const [minYear, setMinYear] = useState(0);
     const [maxYear, setMaxYear] = useState(0);
     const [regionsCategoryData, setRegionsCategoryData] = useState({});
+    const [selectedCategoryName, setSelectedCategoryName] = useState('')
+    const [selectedGroupCategoryName, setSelectedGroupCategoryName] = useState('')
 
     useEffect(() => {
         axios.get('http://localhost:8080/api/v1/regions/list')
@@ -89,6 +91,9 @@ const GraphCreator = ({onRemove, id, graphType}) => {
                         setSelectedYear(response.data.max_year)
                         setMinYear(response.data.min_year)
                         setMaxYear(response.data.max_year)
+                        setSelectedUnit(response.data.unit)
+                        setSelectedCategoryName(response.data.category_name)
+                        setSelectedGroupCategoryName(response.data.group_category_name)
                     })
                     .catch(error => console.error('Ошибка при загрузке данных по категории для регионов:', error));
             }
@@ -102,6 +107,8 @@ const GraphCreator = ({onRemove, id, graphType}) => {
             setSelectedYear(0)
             setMinYear(0)
             setMaxYear(0)
+            setSelectedCategoryName('')
+            setSelectedGroupCategoryName('')
         }
     };
 
@@ -201,6 +208,9 @@ const GraphCreator = ({onRemove, id, graphType}) => {
                     <MapChart
                         id={id}
                         selectedCategories={selectedCategories}
+                        selectedCategoryName={selectedCategoryName}
+                        selectedGroupCategoryName={selectedGroupCategoryName}
+                        selectedUnit={selectedUnit}
                         regionsData={regionsCategoryData}
                         selectedYear={selectedYear}
                     />
@@ -258,15 +268,6 @@ const RegionsGraphSelector = ({
                 onClick={() => handleAdditionalRegionSelection(Object.keys(selectedAdditionalRegions).length + 1, {})}>Добавить
                 регион
             </button>
-            {/*<Select*/}
-            {/*    options={regions.map(region => ({label: region.RegionName, value: region.ID}))}*/}
-            {/*    onChange={values => handleRegionChange({target: {value: values[0].value}})}*/}
-            {/*    values={selectedRegion ? [{*/}
-            {/*        label: regions.find(r => r.ID === selectedRegion).RegionName,*/}
-            {/*        value: selectedRegion*/}
-            {/*    }] : []}*/}
-            {/*    placeholder="Выберите регион"*/}
-            {/*/>*/}
         </div>
     )
 }
